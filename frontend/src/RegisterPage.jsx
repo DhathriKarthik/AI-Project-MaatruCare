@@ -17,25 +17,13 @@ const RegisterPage = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
   
-import React, { useState } from 'react';
-import { FaGoogle, FaFacebook } from 'react-icons/fa';
-import { Link } from 'react-router-dom';
-import './RegisterPage.css'; 
-
-const RegisterPage = () => {
-  const [role, setRole] = useState('mother'); 
-
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-  });
+  const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID; 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
 
   const googleRegister = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
@@ -49,7 +37,6 @@ const RegisterPage = () => {
           role: role,
         });
 
-        // Save Token & Redirect
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userRole", res.data.user.role);
 
@@ -65,7 +52,8 @@ const RegisterPage = () => {
     onError: () => setError("Google Sign-In failed"),
   });
 
-  const FacebookRegister = async (response) => {
+
+  const handleFacebookRegister = async (response) => {
     try {
       setSuccess("");
       setError("");
@@ -74,7 +62,7 @@ const RegisterPage = () => {
       const res = await axios.post("http://localhost:5000/api/auth/facebook", {
         accessToken: response.accessToken,
         userID: response.userID,
-        role: role, 
+        role: role,
       });
 
       localStorage.setItem("token", res.data.token);
@@ -87,6 +75,7 @@ const RegisterPage = () => {
       setError("Facebook Registration Failed.");
     }
   };
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -118,32 +107,25 @@ const RegisterPage = () => {
         );
       }
     }
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const payload = { ...formData, role };
-    console.log("Submitting:", payload);
-   
   };
 
   return (
     <div className="auth-container">
       <div className="auth-wrapper">
-        <div className="auth-header">
-          <span className="name">मातृCare</span>
+        
         
         <div className="auth-header">
-          <span className="logo">MamaMindSense</span>
+          <span className="name">मातृCare</span>
           <h2 className="title">Create your account.</h2>
           <p className="subtitle">Join us to start your journey.</p>
         </div>
 
+       
         <div className="role-toggle">
           <button
             type="button"
             onClick={() => setRole("mother")}
             className={`toggle-btn ${role === "mother" ? "active" : ""}`}
-            onClick={() => setRole('mother')}
-            className={`toggle-btn ${role === 'mother' ? 'active' : ''}`}
           >
             Mother
           </button>
@@ -151,8 +133,6 @@ const RegisterPage = () => {
             type="button"
             onClick={() => setRole("professional")}
             className={`toggle-btn ${role === "professional" ? "active" : ""}`}
-            onClick={() => setRole('professional')}
-            className={`toggle-btn ${role === 'professional' ? 'active' : ''}`}
           >
             Healthcare Professional
           </button>
@@ -192,6 +172,7 @@ const RegisterPage = () => {
           </div>
         )}
 
+   
         <form onSubmit={handleSubmit} className="auth-form">
           <div className="form-group">
             <label>Full Name</label>
@@ -233,12 +214,13 @@ const RegisterPage = () => {
             Sign Up
           </button>
         </form>
+
         <div className="divider">
           <div className="divider-line"></div>
           <span className="divider-text">or sign up with</span>
         </div>
 
-       <div className="social-login">
+        <div className="social-login">
           <button
             className="btn-social"
             type="button"
@@ -252,18 +234,17 @@ const RegisterPage = () => {
             appId={FACEBOOK_APP_ID}
             onSuccess={(response) => {
               console.log("FB Success:", response);
-              FacebookRegister(response); 
+              handleFacebookRegister(response); 
             }}
             onFail={(error) => {
               console.log("FB Failed:", error);
               setError("Facebook Login Failed");
             }}
-           
             render={({ onClick }) => (
               <button
                 className="btn-social"
                 type="button"
-                onClick={onClick} 
+                onClick={onClick}
               >
                 <FaFacebook size={22} />
                 Facebook
@@ -275,20 +256,6 @@ const RegisterPage = () => {
         <div className="auth-footer">
           <p>
             Already have an account?{" "}
-        <div className="social-login">
-          <button className="btn-social">
-            <FaGoogle size={20} />
-            Google
-          </button>
-          <button className="btn-social">
-            <FaFacebook size={22} />
-            Facebook
-          </button>
-        </div>
-        
-        <div className="auth-footer">
-          <p>
-            Already have an account?{' '}
             <Link to="/login" className="link-highlight">
               Log In
             </Link>
@@ -300,5 +267,4 @@ const RegisterPage = () => {
   );
 };
 
-export default RegisterPage;
 export default RegisterPage;

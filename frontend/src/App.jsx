@@ -6,10 +6,6 @@ import VerifyOtp from './VerifyOtp';
 import ForgotPassword from './ForgotPassword';
 import ResetPassword from './ResetPassword';
 
-import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import RegisterPage from './RegisterPage';
-// import LoginPage from './LoginPage'; 
 
 function App() {
   return (
@@ -21,7 +17,6 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        {/* <Route path="/login" element={<LoginPage />} /> */}
         <Route path="*" element={<Navigate to="/register" />} />
       </Routes>
     </BrowserRouter>
