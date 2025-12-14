@@ -1,0 +1,311 @@
+/* Global font for Profile Setup page */
+body {
+  font-family: cursive;
+}
+
+.profile-container {
+  display: flex;
+  min-height: 100vh;
+  background-color: #FFF9F6; 
+  font-family: cursive;
+}
+
+/* Ensure all children inherit Segoe UI within the profile page */
+.profile-container * {
+  font-family: inherit !important;
+}
+
+
+.profile-form-section {
+  flex: 1.5; 
+  padding: 1rem 2rem;
+  overflow-y: auto; 
+}
+
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-header h2 {
+  color: #1e293b;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-family: inherit !important;
+}
+
+.form-header p {
+  color: #64748b;
+  font-size: 1rem;
+  font-family: inherit !important;
+}
+
+
+.section-title {
+  color: #e11d48; 
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #fecdd3; 
+  padding-bottom: 0.5rem;
+  display: inline-block;
+  font-family: inherit !important;
+}
+
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr; 
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.profile-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.profile-input-group label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #334155;
+}
+
+.profile-input {
+  padding: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit !important;
+  transition: all 0.2s;
+}
+
+.profile-input:focus {
+  border-color: #e11d48;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.btn-save {
+  background-color: #fb6f6d;
+  color: white;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: inherit !important;
+  cursor: pointer;
+  margin-top: 2rem;
+  width: 100%;
+  transition: background 0.3s;
+}
+
+.btn-save:hover {
+  background-color: #be123c;
+}
+
+
+.profile-quote-section {
+  flex: 1; 
+  background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%); /* Soft Pink Gradient */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+.quote-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(225, 29, 72, 0.1);
+  max-width: 500px;
+}
+
+.quote-text {
+  font-size: 1.5rem;
+  font-style: italic;
+  color: #881337; 
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  font-family: inherit !important;
+}
+
+.quote-author {
+  font-size: 0.9rem;
+  color: #e11d48;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+
+@media (max-width: 900px) {
+  .profile-container {
+    flex-direction: column-reverse; 
+  }
+  .profile-quote-section {
+    min-height: 200px;
+    height: auto;
+    position: relative;
+  }
+  .input-grid {
+    grid-template-columns: 1fr; 
+  }
+}
+
+.profile-view-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  min-height: 80vh;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  padding: 3rem;
+}
+
+.view-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  border-bottom: 2px solid #f1f5f9;
+  padding-bottom: 1.5rem;
+}
+
+.view-title {
+  font-size: 2.2rem;
+  color: #1e293b;
+  margin: 0;
+  font-family: inherit !important;
+}
+
+.view-subtitle {
+  color: #64748b;
+  margin-top: 0.5rem;
+}
+
+.btn-edit {
+  background-color: white;
+  color: #e11d48;
+  border: 2px solid #e11d48;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  background-color: #fff1f2;
+}
+
+.view-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.view-card {
+  background: #f8fafc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid #e2e8f0;
+}
+
+.highlight-card {
+  background: #fff1f2; 
+  border-color: #fecdd3;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+}
+
+.card-icon {
+  font-size: 1.2rem;
+  color: #e11d48;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #334155;
+  font-family: inherit !important;
+}
+
+/* INFO ROWS */
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+
+.label {
+  color: #64748b;
+  font-weight: 500;
+  font-family: inherit !important;
+}
+
+.value {
+  color: #0f172a;
+  font-weight: 600;
+  text-align: right;
+  font-family: inherit !important;
+}
+
+.badge {
+  background: #e2e8f0;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
+.info-divider {
+  height: 1px;
+  background: #e2e8f0; 
+  margin: 1rem 0;
+}
+
+
+.highlight-text {
+  color: #be123c;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.value-text {
+  color: #334155;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.sub-head {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #94a3b8;
+  margin: 1rem 0 0.8rem 0;
+  font-family: inherit !important;
+}
+
+/* Ensure input placeholders render with the same font */
+.profile-input::placeholder {
+  font-family: inherit !important;
+}
+
