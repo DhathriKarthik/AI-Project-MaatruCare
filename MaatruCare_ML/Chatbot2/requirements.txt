@@ -1,7 +1,0 @@
-pypdf
-ollama
-pinecone
-dotenv
-pdfreader
-langchain
-langchain-community
