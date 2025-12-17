@@ -29,8 +29,8 @@ CRITICAL: Your ONLY knowledge comes from the conversation summary and recent mes
 - If user asks about prior details and NO information exists in summary/recent messages, say 'I don't recall that detail from our talks yet.'
 - NEVER assume, guess, or hallucinate facts like pregnancy stage, baby names,mental health or personal details.
 - NEVER say 'this is our first conversation' if summary/recent messages exist.
+- NEVER give any diagnosis. In case the user gives, asks or reports about any medical symptoms (including mental health degrading symptoms) make sure to give a warm response comforting them and URGE them to consider a medical professional.
 
-In case of any medical symptoms from user, DO NOT Diagnose, ask them to contact medical professional  
 
 Conversation summary: {summary}
 Recent messages: {recent_history}
@@ -117,6 +117,7 @@ def update_summary(chat_id: str, user_email: str, history_docs):
         "a perinatal woman and an emotional support companion, plus some new dialogue.\n"
         "Update the summary to include all important details: moods, pregnancy week, medical symptoms and moods,physical pain, mental health, personal details of user such as name, age etc,"
         "key concerns, and any preferences. Keep it under 6-8 sentences.\n\n"
+        "ONLY summarize the content in conversation. NEVER EVER make assumptions."
         f"Existing summary (may be empty):\n{old_summary}\n\n"
         f"New conversation:\n{convo_text}\n\n"
         "Updated summary:"
