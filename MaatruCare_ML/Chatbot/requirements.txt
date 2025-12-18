@@ -1,1 +1,10 @@
+<<<<<<< HEAD
 langchain
+=======
+pypdf 
+ollama
+pinecone
+dotenv
+langchain
+langchain-ollama
+>>>>>>> 3a78add0b4ed6a220d0894bc79df6e3faa729ddc
