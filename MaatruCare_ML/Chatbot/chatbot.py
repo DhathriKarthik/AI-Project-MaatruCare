@@ -4,6 +4,7 @@ from pymongo import MongoClient
 from datetime import datetime, timezone
 import warnings
 from dotenv import load_dotenv
+from ragsearch import get_rag_context
 import os
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
@@ -143,11 +144,21 @@ def chat_with_mongo_history(message: str) -> str:
     
     # 4) Build ONE clean system prompt with .format()
     recent_history = "\n".join([f"{d['role'].title()}: {d['content']}" for d in recent_docs[-6:]])
+    
+    # 5) Get RAG context
+    rag_context = get_rag_context(message, namespace="")
+    
+    # 6) Build system prompt with RAG
     system_prompt = BASE_SYSTEM_PROMPT.format(
         summary=summary or "None", 
         recent_history=recent_history
     )
+    if rag_context:
+        system_prompt += f"""WHO GUIDELINES EVIDENCE\n{rag_context}.
+        Use this evidence to inform your response (INFORMATION ONLY. NO DIAGNOSIS)."""
+    
     lc_messages = [SystemMessage(content=system_prompt)]
+    
     
     # 5) Add recent history as LangChain messages (no duplicates)
     for doc in recent_docs:
