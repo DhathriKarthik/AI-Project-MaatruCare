@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-<<<<<<< HEAD
 import RegisterPage from './pages/RegisterPage';
 import LoginPage from './pages/LoginPage'; 
 import Dashboard from './pages/Dashboard';
@@ -8,15 +7,6 @@ import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import UserProfile from './pages/UserProfile';
 import ProfileSetup from './pages/ProfileSetup'
-=======
-import RegisterPage from './RegisterPage';
-import LoginPage from './LoginPage'; 
-import Dashboard from './Dashboard';
-import VerifyOtp from './VerifyOtp';
-import ForgotPassword from './ForgotPassword';
-import ResetPassword from './ResetPassword';
-
->>>>>>> 3a78add0b4ed6a220d0894bc79df6e3faa729ddc
 
 function App() {
   return (
@@ -28,12 +18,8 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
-<<<<<<< HEAD
         <Route path="/profile-view" element={<UserProfile />} />
         <Route path="/profile-setup" element={<ProfileSetup />} />
-=======
->>>>>>> 3a78add0b4ed6a220d0894bc79df6e3faa729ddc
-        <Route path="*" element={<Navigate to="/register" />} />
       </Routes>
     </BrowserRouter>
   );
