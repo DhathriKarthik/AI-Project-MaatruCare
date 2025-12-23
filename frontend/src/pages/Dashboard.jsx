@@ -2,13 +2,15 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Dashboard.css";
 import axios from "axios";
+import { CgProfile } from "react-icons/cg";
+import { IoMdLogOut } from "react-icons/io";
 import MoodTrendChart from "../components/MoodTrendChart";
 import MoodInput from "../components/MoodInput";
 import JournalSection from "../components/JournalSection";
 import HappyMoments from "../components/HappyMoments";
 import NotificationsPanel from "../components/NotificationsPanel";
 import MotivationalQuote from "../components/MotivationalQuote";
-import ChatSidebar from "../components/ChatSidebar"; 
+import ChatSidebar from "../components/ChatSidebar";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -51,17 +53,23 @@ const Dashboard = () => {
     loadNotifications();
   }, [timeRange]);
 
-  const loadMoodData = () => { /* ... */ };
+  const loadMoodData = () => {
+    /* ... */
+  };
   const loadJournalEntries = () => {
-     const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
-     setJournalEntries(entries);
+    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
+    setJournalEntries(entries);
   };
   const loadHappyMoments = () => {
-     const moments = JSON.parse(localStorage.getItem("happyMoments") || "[]");
-     setHappyMoments(moments);
+    const moments = JSON.parse(localStorage.getItem("happyMoments") || "[]");
+    setHappyMoments(moments);
   };
-  const loadNotifications = () => { /* ... */ };
-  const generateMoodData = (range) => { /* ... */ }; 
+  const loadNotifications = () => {
+    /* ... */
+  };
+  const generateMoodData = (range) => {
+    /* ... */
+  };
 
   const handleMoodSelect = (mood) => {
     setSelectedMood(mood);
@@ -104,15 +112,25 @@ const Dashboard = () => {
         </div>
 
         <div className="header-actions">
-          <button
-            className="feature-box"
-            title={profileRoute === "/profile-view" ? "View Profile" : "Complete Profile"}
+           <button
+            className="feature-box profile"
+            
             onClick={() => navigate(profileRoute)}
           >
-            <div className="feature-label">Profile</div>
+            <CgProfile />
+            Profile
           </button>
 
-          <button onClick={handleLogout} className="logout-btn" title="Logout">
+          <button
+            className="feature-box"
+            onClick={() => navigate(profileRoute)}
+          >
+            <CgProfile />
+            Doctors team
+          </button>
+
+          <button onClick={handleLogout} className="logout-btn">
+            <IoMdLogOut />
             Logout
           </button>
         </div>
@@ -163,7 +181,6 @@ const Dashboard = () => {
         </div>
       </div>
       <ChatSidebar />
-      
     </div>
   );
 };
