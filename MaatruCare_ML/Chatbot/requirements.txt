@@ -1,0 +1,8 @@
+langchain
+pypdf 
+ollama
+pinecone
+dotenv
+langchain
+langchain-ollama
+
