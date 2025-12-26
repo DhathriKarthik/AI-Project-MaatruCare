@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const HappyMomentsSchema = new mongoose.Schema(
     {
-        userID: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true,
@@ -18,5 +18,5 @@ const HappyMomentsSchema = new mongoose.Schema(
     }
 );
 
-HappyMomentsSchema.index({userID: 1, datetime: 1}, {unique: true});
+HappyMomentsSchema.index({userId: 1, datetime: 1}, {unique: true});
 module.exports = mongoose.model("HappyMoment", HappyMomentsSchema);

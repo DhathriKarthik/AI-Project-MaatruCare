@@ -5,6 +5,7 @@ import MoodInput from './components/MoodInput';
 import JournalSection from './components/JournalSection';
 import HappyMoments from './components/HappyMoments';
 import MotivationalQuote from './components/MotivationalQuote';
+import { text } from 'stream/consumers';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -82,7 +83,7 @@ const Dashboard = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`
         },
-        body: JSON.stringify({ description: moment })
+        body: JSON.stringify({ text: moment })
       });
 
       const newMoment = await res.json();

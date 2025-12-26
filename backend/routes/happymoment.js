@@ -20,7 +20,7 @@ router.post("/", authMiddleware, async (req, res) => {
     const moment = await HappyMoment.create({
       userId: req.userId,
       datetime: new Date(),
-      description: req.body.description
+      text: req.body.text,
     });
     res.status(201).json(moment);
   } catch (err) {

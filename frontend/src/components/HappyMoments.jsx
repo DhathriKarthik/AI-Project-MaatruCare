@@ -43,13 +43,13 @@ const HappyMoments = ({ moments, onAddMoment }) => {
         {moments && moments.length > 0 ? (
           (showAll ? moments : [moments[0]]).map((moment) => {
             const isExpanded = !!expanded[moment.id];
-            const shouldShowMore = moment.description && moment.description.length > 180;
+            const shouldShowMore = moment.text && moment.text.length > 180;
             return (
               <div key={moment.id} className="moment-item">
                 <span className="moment-icon">✨</span>
                 <div className="moment-content">
                   <p className={`moment-text ${isExpanded ? 'expanded' : 'collapsed'}`}>
-                    {moment.description}
+                    {moment.text}
                   </p>
                   <p className="moment-date">{moment.date}</p>
                   {shouldShowMore && (

@@ -71,10 +71,30 @@ const loadJournalEntries = async () => {
     console.error("Error loading journals", err);
   }
 };
-  const loadHappyMoments = () => {
-    const moments = JSON.parse(localStorage.getItem("happyMoments") || "[]");
-    setHappyMoments(moments);
-  };
+const loadHappyMoments = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch("http://localhost:5000/api/happymoments", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    
+    const transformedData = data.map((m) => ({
+      id: m._id,
+      date: m.datetime ? new Date(m.datetime).toLocaleDateString() : "",
+      text: m.text,
+    }));
+    
+    setHappyMoments(transformedData);
+  } catch (err) {
+    console.error("Failed to load happy moments", err);
+  }
+};
+
+
   const loadNotifications = () => {
     /* ... */
   };
@@ -108,16 +128,32 @@ const handleAddJournalEntry = async (entry) => {
 };
 
 
-  const handleAddHappyMoment = (moment) => {
-    const newMoment = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString(),
-      description: moment,
+  const handleAddHappyMoment = async (moment) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch("http://localhost:5000/api/happymoments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ text: moment }),  
+    });
+
+    const newMoment = await res.json();
+    const transformedMoment = {
+      id: newMoment._id,
+      date: new Date(newMoment.datetime).toLocaleDateString(),
+      text: newMoment.text,
     };
-    const updated = [newMoment, ...happyMoments];
-    setHappyMoments(updated);
-    localStorage.setItem("happyMoments", JSON.stringify(updated));
-  };
+    
+    setHappyMoments((prev)=>[transformedMoment, ...prev]);
+  } catch (err) {
+    console.error("Failed to add happy moment", err);
+  }
+};
 
   const handleLogout = () => {
     localStorage.removeItem("token");
