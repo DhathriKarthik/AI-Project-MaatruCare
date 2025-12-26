@@ -8,6 +8,8 @@ from report_generator import generate_mood_report
 from pymongo import MongoClient
 import uvicorn
 import os
+from typing import Any,Dict
+from datetime import datetime
 
 app = FastAPI(title="MaatruCare ML API v1.0")
 
@@ -22,7 +24,7 @@ app.add_middleware(
 
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-db = client.maatruCareBot
+db = client.maatruCareJournal
 moods_collection = db.moods
 
 class MoodRequest(BaseModel):
@@ -32,16 +34,17 @@ class MoodRequest(BaseModel):
 @app.post("/analyze-mood")
 def analyze_mood(req: MoodRequest):
     """Analyze journal text → Save to MongoDB"""
-    result = analyzer.getMoodAnalysisResult(req.text)
-    
-    # Save to YOUR MongoDB
-    moods_collection.insert_one({
-        "userId": req.userId,
+    result: Dict[str, Any] = analyzer.getMoodAnalysisResult(req.text)
+
+    doc = {
+        "userId": req.userId,          # email
+        "text": req.text,              # original journal text
         **result,
-        "timestamp": result["timestamp"]
-    })
-    
-    return result
+        "timestamp": result.get("timestamp", datetime.utcnow()),
+    }
+    moods_collection.insert_one(doc)
+
+    return doc
 
 @app.post("/check-alerts")
 def trigger_alerts():

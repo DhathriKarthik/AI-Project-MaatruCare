@@ -20,7 +20,7 @@ class MoodAnalyzer:
             "text-classification", 
             model="nlptown/bert-base-multilingual-uncased-sentiment"
         )
-        logger.info("✅ Mood analyzer ready!")
+        logger.info(" Mood analyzer ready!")
     
     def getMoodAnalysisResult(self, text: str):
         """Analyze maternal journal → Risk level"""
@@ -33,7 +33,7 @@ class MoodAnalyzer:
             label = res['label']
             score = res['score']
             
-            # Your exact risk logic ✅
+            # Your exact risk logic 
             if label in ('1 star', '2 stars') or (label == '3 stars' and score <= 0.4):
                 mood = 'High Risk'
             elif label == '3 stars' and score > 0.4:

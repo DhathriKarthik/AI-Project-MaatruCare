@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 
 const JournalsSchema = new mongoose.Schema(
     {
-        userID: {
+        userId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User',
             required: true

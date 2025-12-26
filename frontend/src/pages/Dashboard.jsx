@@ -56,10 +56,21 @@ const Dashboard = () => {
   const loadMoodData = () => {
     /* ... */
   };
-  const loadJournalEntries = () => {
-    const entries = JSON.parse(localStorage.getItem("journalEntries") || "[]");
-    setJournalEntries(entries);
-  };
+const loadJournalEntries = async () => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch("http://localhost:5000/api/journals", {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    const data = await res.json();
+    setJournalEntries(data);
+  } catch (err) {
+    console.error("Error loading journals", err);
+  }
+};
   const loadHappyMoments = () => {
     const moments = JSON.parse(localStorage.getItem("happyMoments") || "[]");
     setHappyMoments(moments);
@@ -75,16 +86,27 @@ const Dashboard = () => {
     setSelectedMood(mood);
   };
 
-  const handleAddJournalEntry = (entry) => {
-    const newEntry = {
-      id: Date.now(),
-      date: new Date().toLocaleDateString(),
-      text: entry,
-    };
-    const updated = [newEntry, ...journalEntries];
-    setJournalEntries(updated);
-    localStorage.setItem("journalEntries", JSON.stringify(updated));
-  };
+const handleAddJournalEntry = async (entry) => {
+  try {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const res = await fetch("http://localhost:5000/api/journals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ content: entry }),
+    });
+
+    const newEntry = await res.json();
+    setJournalEntries((prev) => [newEntry, ...prev]);
+  } catch (err) {
+    console.error("Error adding journal", err);
+  }
+};
+
 
   const handleAddHappyMoment = (moment) => {
     const newMoment = {
@@ -173,9 +195,15 @@ const Dashboard = () => {
             <div className="dashboard-card">
               <h2>Daily Journal</h2>
               <JournalSection
-                entries={journalEntries}
-                onAddEntry={handleAddJournalEntry}
-              />
+              entries={journalEntries.map((j) => ({
+                id: j._id,
+                date: j.entryDateTime
+                  ? new Date(j.entryDateTime).toLocaleDateString()
+                  : "",                      // avoid Invalid Date
+                text: j.content,
+              }))}
+              onAddEntry={handleAddJournalEntry}
+/>
             </div>
           </div>
         </div>
