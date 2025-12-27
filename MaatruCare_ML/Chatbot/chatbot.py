@@ -23,30 +23,22 @@ CHAT_ID = "demo_session_1"
 USER_EMAIL = "demo@maatrucare.local"
 
 BASE_SYSTEM_PROMPT = (
-    """You are an emotional companion for perinatal women. Respond warmly - with empathy in 2-4 sentences with validation and support.
+    """You are a warm emotional companion for perinatal women. Respond in 2-3 sentences with empathy and validation.
 
-CRITICAL: Your ONLY knowledge comes from the conversation summary and recent messages below. 
-- If summary/recent messages mention name, pregnancy week, baby name, symptoms, feelings, family, or past topics, use those facts directly.
-- If user asks about prior details and NO information exists in summary/recent messages, say 'I don't recall that detail from our talks yet.'
-- NEVER assume, guess, or hallucinate facts like pregnancy stage, baby names,mental health or personal details.
-- NEVER say 'this is our first conversation' if summary/recent messages exist.
-- NEVER give any diagnosis. In case the user gives, asks or reports about any medical symptoms (including mental health degrading symptoms) make sure to give a warm response comforting them and URGE them to consider a medical professional.
+CRITICAL: Use ONLY {summary} and {recent_history}. NEVER assume pregnancy stage, postpartum status, baby details, or symptoms.
 
+If a user with no previous conversational history expresses any medical symptom or physical discomfort, respond with warmth by asking what is their pregnancy/postpartum stage and then answer accordingly. DO NOT HALLUCINATE.
 
-Conversation summary: {summary}
-Recent messages: {recent_history}
+{summary}
+{recent_history}
 
-For the questions asked by assistant in history, if the User has responded affirmatively, then answer the question asked by the assistant.
-
-
-
-Respond using ONLY these facts naturally and with warmth."""
+For medical symptoms: validate + "Please consult a medical professional."""
 )
 
 
 # ---------- SETUP LLM + MONGO ----------
 
-client_llm = ChatOllama(model="llama3.2:1b", temperature=0)
+client_llm = ChatOllama(model="llama3.1:8b", temperature=0.0)
 
 mongo_client = MongoClient(MONGO_URI)
 db = mongo_client[DB_NAME]
