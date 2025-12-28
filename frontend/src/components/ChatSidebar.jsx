@@ -13,22 +13,35 @@ const ChatSidebar = () => {
     setIsOpen(!isOpen);
   };
 
-  const handleSend = () => {
-    if (input.trim() === "") return;
+  const handleSend = async () => {
+  if (input.trim() === "") return;
 
-    // Add user message
-    const userMessage = { text: input, sender: "user" };
-    setMessages([...messages, userMessage]);
-    setInput("");
+  // Add user message
+  const userMessage = { text: input, sender: "user" };
+  setMessages(prev=>[...prev, userMessage]);
+  const tempInput = input;
+  setInput("");
 
-    // Simulate Bot Response
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        { text: "Thank you for sharing. I'm listening.", sender: "bot" }
-      ]);
-    }, 1000);
-  };
+  // Call YOUR FastAPI (replace with real user email/chat_id)
+  try {
+    const res = await fetch('http://localhost:8000/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: tempInput,
+        user_email: "demo@maatrucare.local",  // From auth later
+        chat_id: "demo_session_1"             // From localStorage later
+      })
+    });
+    const { reply } = await res.json();
+    
+    // Add real bot response
+    setMessages(prev => [...prev, { text: reply, sender: "bot" }]);
+  } catch (error) {
+    setMessages(prev => [...prev, { text: "Sorry, I'm having trouble connecting.", sender: "bot" }]);
+  }
+};
+
 
   return (
     <>

@@ -14,13 +14,10 @@ load_dotenv()
 # ---------- CONFIG ----------
 
 MONGO_URI = os.getenv("MONGO_URI")  # from .env
-DB_NAME = "maatrucare_chat"
-MESSAGES_COLLECTION_NAME = "messages"
-SUMMARIES_COLLECTION_NAME = "summaries"
+DB_NAME = "MaatruCare"
+MESSAGES_COLLECTION_NAME = "maatrucare_chat_messages"
+SUMMARIES_COLLECTION_NAME = "maatrucare_chat_summaries"
 
-# For now: one fixed chat + user; later replace with real IDs from auth / frontend
-CHAT_ID = "demo_session_1"
-USER_EMAIL = "demo@maatrucare.local"
 
 BASE_SYSTEM_PROMPT = (
     """You are a warm emotional companion for perinatal women. Respond in 2-3 sentences with empathy and validation.
@@ -124,12 +121,12 @@ def update_summary(chat_id: str, user_email: str, history_docs):
 
 # ---------- CHAT LOGIC ----------
 
-def chat_with_mongo_history(message: str) -> str:
+def chat_with_mongo_history(message: str, user_email: str, chat_id: str) -> str:
     # 1) Load recent history
-    history_docs = load_history(CHAT_ID, USER_EMAIL, limit=40)
+    history_docs = load_history(chat_id, user_email, limit=40)
     
     # 2) Update/get summary
-    summary = update_summary(CHAT_ID, USER_EMAIL, history_docs)
+    summary = update_summary(chat_id, user_email, history_docs)
     
     # 3) Get recent docs FIRST (before formatting)
     recent_docs = history_docs[-8:]  # last 8 messages
@@ -165,26 +162,10 @@ def chat_with_mongo_history(message: str) -> str:
     # 7) Call + save
     response = client_llm.invoke(lc_messages)
     assistant_response = response.content
-    save_message(CHAT_ID, USER_EMAIL, "user", message)
-    save_message(CHAT_ID, USER_EMAIL, "assistant", assistant_response)
+    save_message(chat_id, user_email, "user", message)
+    save_message(chat_id, user_email, "assistant", assistant_response)
     
     return assistant_response
 
 
 
-# ---------- CLI LOOP ----------
-
-def main():
-    print("Hey! How are you feeling today?")
-    while True:
-        user_input = input("You: ").strip()
-        if user_input.lower() == "bye":
-            print("Goodbye! Take care..")
-            break
-
-        reply = chat_with_mongo_history(user_input)
-        print("AI:", reply)
-
-
-if __name__ == "__main__":
-    main()
