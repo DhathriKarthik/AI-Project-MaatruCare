@@ -45,12 +45,12 @@ summaries_col = db[SUMMARIES_COLLECTION_NAME]
 
 # ---------- DB HELPERS ----------
 
-def save_message(chat_id: str, user_email: str, role: str, content: str):
+def save_message(chat_id: str, user_id: str, role: str, content: str):
     """Store a single message in MongoDB."""
     messages_col.insert_one(
         {
             "chat_id": chat_id,
-            "user_email": user_email,
+            "user_id": user_id,
             "role": role,
             "content": content,
             "timestamp": datetime.now(timezone.utc),
@@ -58,26 +58,26 @@ def save_message(chat_id: str, user_email: str, role: str, content: str):
     )
 
 
-def load_history(chat_id: str, user_email: str, limit: int = 50):
+def load_history(chat_id: str, user_id: str, limit: int = 50):
     """Load last N messages for this chat+user."""
     cursor = (
-        messages_col.find({"chat_id": chat_id, "user_email": user_email})
+        messages_col.find({"chat_id": chat_id, "user_id": user_id})
         .sort("timestamp", 1)  # oldest -> newest
         .limit(limit)
     )
     return list(cursor)
 
 
-def get_summary(chat_id: str, user_email: str) -> str:
+def get_summary(chat_id: str, user_id: str) -> str:
     """Get existing rolling summary for this chat+user."""
-    doc = summaries_col.find_one({"chat_id": chat_id, "user_email": user_email})
+    doc = summaries_col.find_one({"chat_id": chat_id, "user_id": user_id})
     return doc["summary"] if doc and "summary" in doc else ""
 
 
-def save_summary(chat_id: str, user_email: str, summary: str):
+def save_summary(chat_id: str, user_id: str, summary: str):
     """Upsert rolling summary for this chat+user."""
     summaries_col.update_one(
-        {"chat_id": chat_id, "user_email": user_email},
+        {"chat_id": chat_id, "user_id": user_id},
         {
             "$set": {
                 "summary": summary,
@@ -90,9 +90,9 @@ def save_summary(chat_id: str, user_email: str, summary: str):
 
 # ---------- SUMMARY LOGIC ----------
 
-def update_summary(chat_id: str, user_email: str, history_docs):
+def update_summary(chat_id: str, user_id: str, history_docs):
     """Update rolling summary using existing summary + recent messages."""
-    old_summary = get_summary(chat_id, user_email)
+    old_summary = get_summary(chat_id, user_id)
 
     # Convert recent messages to a simple text transcript
     convo_text_lines = []
@@ -115,18 +115,18 @@ def update_summary(chat_id: str, user_email: str, history_docs):
 
     resp = client_llm.invoke([HumanMessage(content=prompt)])
     new_summary = resp.content.strip()
-    save_summary(chat_id, user_email, new_summary)
+    save_summary(chat_id, user_id, new_summary)
     return new_summary
 
 
 # ---------- CHAT LOGIC ----------
 
-def chat_with_mongo_history(message: str, user_email: str, chat_id: str) -> str:
+def chat_with_mongo_history(message: str, user_id: str, chat_id: str) -> str:
     # 1) Load recent history
-    history_docs = load_history(chat_id, user_email, limit=40)
+    history_docs = load_history(chat_id, user_id, limit=40)
     
     # 2) Update/get summary
-    summary = update_summary(chat_id, user_email, history_docs)
+    summary = update_summary(chat_id, user_id, history_docs)
     
     # 3) Get recent docs FIRST (before formatting)
     recent_docs = history_docs[-8:]  # last 8 messages
@@ -139,7 +139,7 @@ def chat_with_mongo_history(message: str, user_email: str, chat_id: str) -> str:
     
     # 6) Build system prompt with RAG
     system_prompt = BASE_SYSTEM_PROMPT.format(
-        summary=summary or "None", 
+        summary=summary , 
         recent_history=recent_history
     )
     if rag_context:
@@ -162,8 +162,8 @@ def chat_with_mongo_history(message: str, user_email: str, chat_id: str) -> str:
     # 7) Call + save
     response = client_llm.invoke(lc_messages)
     assistant_response = response.content
-    save_message(chat_id, user_email, "user", message)
-    save_message(chat_id, user_email, "assistant", assistant_response)
+    save_message(chat_id, user_id, "user", message)
+    save_message(chat_id, user_id, "assistant", assistant_response)
     
     return assistant_response
 
