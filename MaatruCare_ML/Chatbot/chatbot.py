@@ -13,7 +13,7 @@ load_dotenv()
 
 # ---------- CONFIG ----------
 
-MONGO_URI = os.getenv("MONGO_URI")  # from .env
+MONGO_URI = os.getenv("MONGO_URI") 
 DB_NAME = "MaatruCare"
 MESSAGES_COLLECTION_NAME = "maatrucare_chat_messages"
 SUMMARIES_COLLECTION_NAME = "maatrucare_chat_summaries"
