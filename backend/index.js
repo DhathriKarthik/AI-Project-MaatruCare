@@ -54,6 +54,21 @@ app.post('/api/analyze-mood', async (req, res) => {
   }
 });
 
+app.get('/report/:userId', async (req, res) => {
+  try {
+    const response = await fetch(`http://localhost:8001/report/${req.params.userId}`);
+    const buffer = await response.arrayBuffer();
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename="maatru-report-${req.params.userId}.pdf"`
+    });
+    res.send(Buffer.from(buffer));
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);

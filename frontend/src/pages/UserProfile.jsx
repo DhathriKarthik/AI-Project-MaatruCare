@@ -95,7 +95,7 @@ const UserProfile = () => {
   <button
     className="btn-pill"
     onClick={() =>
-      window.open(`http://127.0.0.1:8000/report/${userId}`, "_blank")
+      window.open(`http://127.0.0.1:5000/report/${userId}`, "_blank")
     }
   >
     <FaFileAlt style={{ marginRight: "6px" }} /> My Report
@@ -111,7 +111,6 @@ const UserProfile = () => {
 
     </header>
 
-     
       <div
         className="dashboard-grid"
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(350px, 1fr))" }}

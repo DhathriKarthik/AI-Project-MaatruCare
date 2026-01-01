@@ -1,5 +1,5 @@
 # api.py
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response,HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from moodanalysis import analyzer
@@ -11,6 +11,9 @@ import os
 from bson import ObjectId 
 from typing import Any,Dict
 from datetime import datetime, UTC
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI(title="MaatruCare ML API v1.0")
 
@@ -78,7 +81,7 @@ def get_report(user_id: str):
     pdf = generate_mood_report(user_id)
     if pdf:
         return Response(content=pdf, media_type="application/pdf")
-    return {"error": "No mood data found"}
+    raise HTTPException(status_code=404, detail="No mood data - journal first")
 
 if __name__ == "__main__":
     uvicorn.run(app, host="127.0.0.1", port=8001)

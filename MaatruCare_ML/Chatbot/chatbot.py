@@ -35,7 +35,7 @@ For medical symptoms: validate + "Please consult a medical professional."""
 
 # ---------- SETUP LLM + MONGO ----------
 
-client_llm = ChatOllama(model="llama3.1:8b", temperature=0.0)
+client_llm = ChatOllama(model="llama3.1:8b-instruct-q4_K_S", temperature=0.0)
 
 mongo_client = MongoClient(MONGO_URI)
 db = mongo_client[DB_NAME]
