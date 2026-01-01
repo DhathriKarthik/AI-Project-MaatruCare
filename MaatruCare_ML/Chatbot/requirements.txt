@@ -4,5 +4,4 @@ ollama
 pinecone
 dotenv
 langchain
-langchain-ollama
-
+langchain-ollama 

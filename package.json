@@ -1,0 +1,16 @@
+{
+  "name": "maatrucare-full-stack",
+  "version": "1.0.0",
+  "description": "MaatruCare - Full Stack Application",
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run chatbot\" \"npm run moodanalyzer\"",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "chatbot": ".venv\\Scripts\\activate && cd MaatruCare_ML/Chatbot && python chatbot_api.py",
+    "moodanalyzer": ".venv\\Scripts\\activate && cd MaatruCare_ML/MoodAnalyser && python api.py"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}
