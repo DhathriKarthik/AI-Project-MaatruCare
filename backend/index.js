@@ -24,6 +24,38 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
+app.post('/api/chat', async (req, res) => {
+  //console.log('🤖 Chat:', req.body.message);
+  try {
+    const pyRes = await fetch('http://localhost:8000/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(req.body)
+    });
+    const data = await pyRes.json();
+    //console.log('✅ Reply:', data.reply?.slice(0,50) + '...');
+    res.json(data);
+  } catch (err) {
+    console.error('❌ Chatbot:', err.message);
+    res.status(503).json({ error: 'Bot loading...' });
+  }
+});
+
+// backend/index.js
+app.post('/api/analyze-mood', async (req, res) => {
+  try {
+    const response = await fetch('http://localhost:8001/analyze-mood', {  // 8001!
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(req.body)
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 const connectDB = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -59,5 +91,3 @@ app.use("/api/journals", journalRoutes);
 
 const happyMomentRoutes = require("./routes/happymoment");
 app.use("/api/happymoments", happyMomentRoutes);
-
-
