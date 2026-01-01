@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  FaUserInjured, FaCalendarCheck, FaClock, FaSignOutAlt, 
-  FaPhone, FaEnvelope, FaCheck, FaTimes 
+  FaUserInjured, FaSignOutAlt, FaCalendarCheck, FaClock, 
+  FaCheck, FaTimes, FaPhone, FaEnvelope, FaSave
 } from 'react-icons/fa';
 import axios from 'axios';
 import './DoctorDashboard.css'; 
@@ -10,23 +10,47 @@ import './DoctorDashboard.css';
 const DoctorDashboard = () => {
   const navigate = useNavigate();
   
-    const [doctorInfo, setDoctorInfo] = useState({
-        name: 'Doctor',
-        specialty: 'Health Professional',
-        image: 'https://randomuser.me/api/portraits/men/32.jpg',
-        status: 'Available'
-    });
+  // --- 1. TAB STATE ---
+  const [activeTab, setActiveTab] = useState('patients'); // Default tab
 
-    const [stats] = useState({
-        totalPatients: 0,
-        todayAppointments: 0,
-        pendingRequests: 0
-    });
+  // --- 2. DOCTOR DATA STATE ---
+  const [doctor, setDoctor] = useState(null);
+  const [doctorInfo, setDoctorInfo] = useState({
+     name: 'Doctor',
+     specialty: 'Health Professional',
+     image: 'https://randomuser.me/api/portraits/men/32.jpg',
+     status: 'Available'
+  });
 
-    const [myPatients, setMyPatients] = useState([]);
-    const [loadingProfile, setLoadingProfile] = useState(true);
+  const [stats, setStats] = useState({
+     totalPatients: 0,
+     todayAppointments: 0,
+     pendingRequests: 0
+  });
 
-    // --- INITIAL FETCH ON LOAD ---
+  const [myPatients, setMyPatients] = useState([]); 
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  // --- 3. SCHEDULE & AVAILABILITY STATE ---
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  
+  const [availability, setAvailability] = useState([
+    { day: 'Monday', active: true, start: '09:00', end: '17:00' },
+    { day: 'Tuesday', active: true, start: '09:00', end: '17:00' },
+    { day: 'Wednesday', active: true, start: '09:00', end: '17:00' },
+    { day: 'Thursday', active: true, start: '09:00', end: '17:00' },
+    { day: 'Friday', active: true, start: '09:00', end: '17:00' },
+    { day: 'Saturday', active: false, start: '10:00', end: '14:00' },
+    { day: 'Sunday', active: false, start: '', end: '' },
+  ]);
+
+  const scheduleItems = [
+    { id: 1, time: "09:30 AM", patient: "Sita Sharma", type: "Checkup", status: "confirmed" },
+    { id: 2, time: "11:00 AM", patient: "Gita Patel", type: "Consultation", status: "confirmed" },
+    { id: 3, time: "02:15 PM", patient: "Anita Roy", type: "Follow-up", status: "pending" },
+  ];
+
+  // --- 4. FETCH DATA ---
   useEffect(() => {
     const fetchDashboardData = async () => {
       try {
@@ -37,41 +61,39 @@ const DoctorDashboard = () => {
         }
 
         const config = { headers: { Authorization: `Bearer ${token}` } };
-
-        // 1. USE THE CORRECT API ENDPOINT
-        // We check '/api/doctor/me'. If it exists, we get data. If not, it throws an error.
         const res = await axios.get('http://localhost:5000/api/doctor/me', config);
-        
-        // 2. If successful, it means Profile IS Filled. Load the data.
         const d = res.data;
-        setDoctor({
-          name: d.personalInfo?.name,
-          specialty: d.personalInfo?.specialty,
-          image: d.personalInfo?.image || "https://randomuser.me/api/portraits/men/32.jpg",
-          experience: d.personalInfo?.experience,
-          about: d.personalInfo?.about,
-          education: d.personalInfo?.education,
-          languages: d.personalInfo?.languages || [],
-          fee: d.clinicInfo?.fee,
-          location: d.clinicInfo?.address,
-          timings: d.clinicInfo?.timings,
-          rating: d.stats?.rating || 4.8,
-          reviews: d.stats?.reviews || 0,
-          patientsServed: d.stats?.patientsServed || 0
+        
+        setDoctor(d);
+        setDoctorInfo({
+            name: d.personalInfo?.name || 'Doctor',
+            specialty: d.personalInfo?.specialty || 'Specialist',
+            image: d.personalInfo?.image || "https://randomuser.me/api/portraits/men/32.jpg",
+            status: 'Available'
         });
         
-        // If we have data, we stay on the dashboard
-        setLoading(false);
+        // Mock Stats based on data (or use real data if available)
+        setStats({
+            totalPatients: d.stats?.patientsServed || 12,
+            todayAppointments: 3,
+            pendingRequests: 1
+        });
+        
+        // Mock Patients (Replace with real API call later)
+        setMyPatients([
+            { id: 101, name: "Sneha Gupta", age: 28, issue: "Prenatal Checkup", time: "10:00 AM", status: "Pending" },
+            { id: 102, name: "Priya Singh", age: 31, issue: "Blood Pressure", time: "11:30 AM", status: "Confirmed" }
+        ]);
+
+        setLoadingProfile(false);
 
       } catch (err) {
-        // 3. IF ERROR IS 400 or 404 -> PROFILE DOES NOT EXIST
-        // This is where we redirect them to the Setup Page
         if (err.response && (err.response.status === 400 || err.response.status === 404)) {
           console.log("Profile not found, redirecting to setup...");
           navigate('/doctor-profile-setup');
         } else {
           console.error("Server Error:", err);
-          setLoading(false);
+          setLoadingProfile(false);
         }
       }
     };
@@ -79,8 +101,9 @@ const DoctorDashboard = () => {
     fetchDashboardData();
   }, [navigate]);
 
+  // --- HANDLERS ---
   const handleAccept = (id) => {
-    setMyPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'Upcoming' } : p));
+    setMyPatients(prev => prev.map(p => p.id === id ? { ...p, status: 'Confirmed' } : p));
   };
 
   const handleReject = (id) => {
@@ -88,19 +111,38 @@ const DoctorDashboard = () => {
   };
 
   const handleProfileClick = () => {
-  const isProfileFilled = doctor && doctor.specialty; 
+    if (doctor) {
+      navigate('/doctor-profile-view');
+    } else {
+      navigate('/doctor-profile-setup');
+    }
+  };
 
-  if (isProfileFilled) {
-    navigate('/doctor-profile-view');
-  } else {
-    navigate('/doctor-profile-setup');
-  }
-};
+  const handleAvailabilityChange = (index, field, value) => {
+    const newAvail = [...availability];
+    newAvail[index][field] = value;
+    setAvailability(newAvail);
+  };
+
+  const handleSaveAvailability = () => {
+    alert("Availability Settings Saved!");
+  };
+
+  const getWeekDates = () => {
+    const dates = [];
+    const today = new Date();
+    for(let i=0; i<7; i++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() + i);
+        dates.push(d);
+    }
+    return dates;
+  };
 
   return (
     <div className="doc-dashboard-container">
       
-      {/* SIDEBAR */}
+      {/* --- SIDEBAR --- */}
       <div className="doc-sidebar">
         <div className="doc-profile-section">
             <img src={doctorInfo.image} alt="Doctor" className="doc-profile-img" />
@@ -112,103 +154,218 @@ const DoctorDashboard = () => {
         </div>
         
         <nav className="doc-nav">
-            {/* Pill Shaped Buttons similar to your Profile UI */}
-            <button className="doc-nav-item active"><FaUserInjured /> My Patients</button>
-            <button className="doc-nav-item"><FaCalendarCheck /> Schedule</button>
-            <button className="doc-nav-item"><FaClock /> Availability</button>
+            {/* BUTTONS NOW CHANGE THE 'activeTab' STATE */}
+            <button 
+                className={`doc-nav-item ${activeTab === 'patients' ? 'active' : ''}`} 
+                onClick={() => setActiveTab('patients')}
+            >
+                <FaUserInjured /> My Patients
+            </button>
+            <button 
+                className={`doc-nav-item ${activeTab === 'schedule' ? 'active' : ''}`}
+                onClick={() => setActiveTab('schedule')}
+            >
+                <FaCalendarCheck /> Schedule
+            </button>
+            <button 
+                className={`doc-nav-item ${activeTab === 'availability' ? 'active' : ''}`}
+                onClick={() => setActiveTab('availability')}
+            >
+                <FaClock /> Availability
+            </button>
         </nav>
 
-        {/* Unique class 'doc-logout-btn' so it doesn't break Mother Dashboard */}
         <button className="doc-logout-btn" onClick={() => navigate('/')}>
             <FaSignOutAlt /> Logout
         </button>
       </div>
 
-            {/* MAIN CONTENT */}
-            <div className="doc-main-content">
-                <div className="doc-topbar">
-                    <div className="doc-brand">
-                        <span className="doc-brand-name">मातृCare</span>
-                        <span className="doc-brand-sub">Doctor Portal</span>
-                    </div>
-                    <div className="doc-top-actions">
-                        <button className="doc-chip secondary" onClick={handleProfileClick}> Profile</button>
-                        <button className="doc-chip primary">Notifications</button>
-                    </div>
-                </div>
+      {/* --- MAIN CONTENT AREA --- */}
+      <div className="doc-main-content">
+        
+        {/* TOPBAR (Visible on all tabs) */}
+        <div className="doc-topbar">
+            <div className="doc-brand">
+                <span className="doc-brand-name">मातृCare</span>
+                <span className="doc-brand-sub">Doctor Portal</span>
+            </div>
+            <div className="doc-top-actions">
+                <button className="doc-chip secondary" onClick={handleProfileClick}> Profile</button>
+                <button className="doc-chip primary">Notifications</button>
+            </div>
+        </div>
 
+        {/* --- TAB 1: MY PATIENTS (DEFAULT) --- */}
+        {activeTab === 'patients' && (
+            <div className="fade-in">
                 <div className="doc-header">
-                        <h1>Welcome back, {doctorInfo.name} 👋</h1>
-                        <p>Here is your daily activity summary.</p>
+                    <h1>Welcome back, {doctorInfo.name.split(' ')[0]} 👋</h1>
+                    <p>Here is your daily activity summary.</p>
                 </div>
 
-        {/* STATS */}
-        <div className="doc-stats-grid">
-            <div className="doc-stat-card">
-                <div className="doc-stat-icon pink"><FaUserInjured /></div>
-                <div className="doc-stat-info">
-                    <h3>{stats.totalPatients}</h3>
-                    <p>Total Patients</p>
-                </div>
-            </div>
-            <div className="doc-stat-card">
-                <div className="doc-stat-icon blue"><FaCalendarCheck /></div>
-                <div className="doc-stat-info">
-                    <h3>{stats.todayAppointments}</h3>
-                    <p>Today's Appointments</p>
-                </div>
-            </div>
-            <div className="doc-stat-card">
-                <div className="doc-stat-icon orange"><FaClock /></div>
-                <div className="doc-stat-info">
-                    <h3>{stats.pendingRequests}</h3>
-                    <p>Pending Requests</p>
-                </div>
-            </div>
-        </div>
-
-        {/* APPOINTMENTS LIST */}
-        <div className="doc-section-container">
-            <h2>Upcoming Appointments</h2>
-            <div className="doc-patients-list">
-                {loadingProfile ? (
-                  <p className="doc-no-data">Loading your schedule...</p>
-                ) : myPatients.length > 0 ? (
-                    myPatients.map((patient) => (
-                        <div key={patient.id} className="doc-patient-card">
-                            <div className="doc-patient-info">
-                                <h4>{patient.name}</h4>
-                                <p>{patient.issue} • Age: {patient.age}</p>
-                                <span className="doc-time-badge">{patient.time}</span>
-                            </div>
-                            
-                            <div className="doc-patient-actions">
-                                {patient.status === 'Pending' ? (
-                                    <>
-                                        <button className="doc-action-btn accept" onClick={() => handleAccept(patient.id)}>
-                                            <FaCheck /> Accept
-                                        </button>
-                                        <button className="doc-action-btn reject" onClick={() => handleReject(patient.id)}>
-                                            <FaTimes /> Reject
-                                        </button>
-                                    </>
-                                ) : (
-                                    <div className="doc-contact-options">
-                                        <button className="doc-icon-btn"><FaPhone /></button>
-                                        <button className="doc-icon-btn"><FaEnvelope /></button>
-                                        <span className={`doc-status-tag ${patient.status.toLowerCase()}`}>
-                                            {patient.status}
-                                        </span>
-                                    </div>
-                                )}
-                            </div>
+                <div className="doc-stats-grid">
+                    <div className="doc-stat-card">
+                        <div className="doc-stat-icon pink"><FaUserInjured /></div>
+                        <div className="doc-stat-info">
+                            <h3>{stats.totalPatients}</h3>
+                            <p>Total Patients</p>
                         </div>
-                    ))
-                ) : (
-                    <p className="doc-no-data">No appointments yet. Once patients book with you, they will appear here.</p>
-                )}
+                    </div>
+                    <div className="doc-stat-card">
+                        <div className="doc-stat-icon blue"><FaCalendarCheck /></div>
+                        <div className="doc-stat-info">
+                            <h3>{stats.todayAppointments}</h3>
+                            <p>Today's Appts</p>
+                        </div>
+                    </div>
+                    <div className="doc-stat-card">
+                        <div className="doc-stat-icon orange"><FaClock /></div>
+                        <div className="doc-stat-info">
+                            <h3>{stats.pendingRequests}</h3>
+                            <p>Pending Requests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="doc-section-container">
+                    <h2>Upcoming Appointments</h2>
+                    <div className="doc-patients-list">
+                        {loadingProfile ? (
+                            <p className="doc-no-data">Loading...</p>
+                        ) : myPatients.length > 0 ? (
+                            myPatients.map((patient) => (
+                                <div key={patient.id} className="doc-patient-card">
+                                    <div className="doc-patient-info">
+                                        <h4>{patient.name}</h4>
+                                        <p>{patient.issue} • Age: {patient.age}</p>
+                                        <span className="doc-time-badge">{patient.time}</span>
+                                    </div>
+                                    <div className="doc-patient-actions">
+                                        {patient.status === 'Pending' ? (
+                                            <>
+                                                <button className="doc-action-btn accept" onClick={() => handleAccept(patient.id)}>
+                                                    <FaCheck /> Accept
+                                                </button>
+                                                <button className="doc-action-btn reject" onClick={() => handleReject(patient.id)}>
+                                                    <FaTimes /> Reject
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <div className="doc-contact-options">
+                                                <button className="doc-icon-btn"><FaPhone /></button>
+                                                <button className="doc-icon-btn"><FaEnvelope /></button>
+                                                <span className={`doc-status-tag ${patient.status.toLowerCase()}`}>
+                                                    {patient.status}
+                                                </span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                            ))
+                        ) : (
+                            <p className="doc-no-data">No appointments yet.</p>
+                        )}
+                    </div>
+                </div>
             </div>
-        </div>
+        )}
+
+        {/* --- TAB 2: SCHEDULE VIEW --- */}
+        {activeTab === 'schedule' && (
+            <div className="fade-in">
+                 <div className="doc-header">
+                    <h1>My Schedule 📅</h1>
+                    <p>Manage your weekly appointments.</p>
+                </div>
+
+                {/* Date Strip */}
+                <div className="schedule-date-strip">
+                    {getWeekDates().map((date, index) => (
+                        <div 
+                            key={index} 
+                            className={`date-card ${date.getDate() === selectedDate.getDate() ? 'active' : ''}`}
+                            onClick={() => setSelectedDate(date)}
+                        >
+                            <span className="day-name">{date.toLocaleDateString('en-US', { weekday: 'short' })}</span>
+                            <span className="day-num">{date.getDate()}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Timeline */}
+                <div className="doc-section-container">
+                    <h3 className="section-heading">Timeline for {selectedDate.toLocaleDateString()}</h3>
+                    <div className="timeline-grid">
+                        {scheduleItems.map(item => (
+                            <div key={item.id} className="timeline-item">
+                                <div className="time-col">{item.time}</div>
+                                <div className={`appt-card ${item.status}`}>
+                                    <h4>{item.patient}</h4>
+                                    <p>{item.type}</p>
+                                    <span className="status-tag">{item.status}</span>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        )}
+
+        {/* --- TAB 3: AVAILABILITY SETTINGS --- */}
+        {activeTab === 'availability' && (
+            <div className="fade-in">
+                <div className="doc-header">
+                    <h1>Set Availability 🕒</h1>
+                    <p>Configure your clinic hours.</p>
+                </div>
+
+                <div className="availability-card">
+                    <div className="avail-header-row">
+                        <span>Day</span>
+                        <span>Status</span>
+                        <span>Start</span>
+                        <span>End</span>
+                    </div>
+
+                    <div className="avail-list">
+                        {availability.map((item, index) => (
+                            <div key={item.day} className={`avail-row ${item.active ? 'active' : 'inactive'}`}>
+                                <div className="day-label">{item.day}</div>
+                                <div className="toggle-wrapper">
+                                    <label className="switch">
+                                        <input 
+                                            type="checkbox" 
+                                            checked={item.active} 
+                                            onChange={(e) => handleAvailabilityChange(index, 'active', e.target.checked)}
+                                        />
+                                        <span className="slider round"></span>
+                                    </label>
+                                    <span className="status-text">{item.active ? 'Open' : 'Closed'}</span>
+                                </div>
+                                <input 
+                                    type="time" className="time-input" 
+                                    value={item.start} disabled={!item.active}
+                                    onChange={(e) => handleAvailabilityChange(index, 'start', e.target.value)}
+                                />
+                                <span className="to-divider">-</span>
+                                <input 
+                                    type="time" className="time-input" 
+                                    value={item.end} disabled={!item.active}
+                                    onChange={(e) => handleAvailabilityChange(index, 'end', e.target.value)}
+                                />
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="avail-footer">
+                        <button className="save-avail-btn" onClick={handleSaveAvailability}>
+                            <FaSave /> Save Changes
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+
       </div>
     </div>
   );

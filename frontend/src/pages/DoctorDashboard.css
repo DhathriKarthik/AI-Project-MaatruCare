@@ -323,3 +323,234 @@
 .doc-no-data { color: #94a3b8; font-style: italic; }
 
 
+/* --- SCHEDULE TAB STYLES --- */
+
+/* Date Strip (Horizontal Scroll) */
+.schedule-date-strip {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 30px;
+  overflow-x: auto;
+  padding-bottom: 10px;
+}
+
+.date-card {
+  min-width: 70px;
+  height: 80px;
+  background: white;
+  border-radius: 15px;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.date-card:hover {
+  border-color: #e11d48;
+  background-color: #fff0f3;
+}
+
+.date-card.active {
+  background-color: #e11d48;
+  color: white;
+  box-shadow: 0 4px 10px rgba(225, 29, 72, 0.3);
+  border-color: #e11d48;
+}
+
+.day-name { font-size: 12px; text-transform: uppercase; font-weight: 700; }
+.day-num { font-size: 22px; font-weight: 700; margin-top: 5px; }
+
+/* Timeline / Agenda View */
+.timeline-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 20px;
+}
+
+.time-col {
+  width: 80px;
+  font-size: 14px;
+  color: #64748b;
+  font-weight: 600;
+  padding-top: 15px;
+  text-align: right;
+}
+
+.appt-card {
+  flex: 1;
+  background: white;
+  padding: 15px 20px;
+  border-radius: 12px;
+  border-left: 4px solid #e2e8f0;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.appt-card.confirmed { border-left-color: #059669; background-color: #ecfdf5; }
+.appt-card.pending { border-left-color: #f59e0b; background-color: #fffbeb; }
+.appt-card.free { border-left-color: #cbd5e1; border: 1px dashed #cbd5e1; background: transparent; color: #94a3b8; }
+
+.appt-card h4 { margin: 0 0 5px 0; color: #1e293b; font-size: 16px; }
+.appt-card p { margin: 0; font-size: 13px; color: #475569; }
+
+/* --- AVAILABILITY TAB STYLES --- */
+
+/* --- AVAILABILITY TAB STYLES --- */
+
+.availability-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+  min-width: 600px; /* Ensures it doesn't get too squished */
+}
+
+/* 1. DEFINE THE GRID LAYOUT */
+/* We need 5 columns: Day | Toggle | Start | (-) | End */
+.avail-header-row, 
+.avail-row {
+  display: grid;
+  /* Fixed widths for labels, flexible space for inputs */
+  grid-template-columns: 120px 140px 1fr 20px 1fr; 
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+/* 2. HEADER SPECIFIC STYLES */
+.avail-header-row {
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+/* 3. ROW SPECIFIC STYLES */
+.avail-row {
+  padding: 15px 0;
+  border-bottom: 1px solid #f8fafc;
+}
+
+.day-label { 
+  font-weight: 600; 
+  color: #334155; 
+  font-size: 15px;
+}
+
+.to-divider { 
+  text-align: center; 
+  color: #cbd5e1; 
+  font-weight: bold;
+}
+
+/* TOGGLE SWITCH WRAPPER */
+.toggle-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-text {
+  font-size: 14px;
+  color: #64748b;
+  min-width: 50px; /* Prevents jumping when text changes */
+}
+
+/* CUSTOM SWITCH */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.switch input { opacity: 0; width: 0; height: 0; }
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px; width: 18px;
+  left: 3px; bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+input:checked + .slider { background-color: #e11d48; }
+input:checked + .slider:before { transform: translateX(20px); }
+
+/* TIME INPUTS */
+.time-input {
+  padding: 10px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  color: #334155;
+  font-family: inherit;
+  font-size: 14px;
+  width: 100%;
+  outline: none;
+  transition: all 0.2s;
+  background: #f8fafc;
+}
+
+.time-input:focus {
+  background: white;
+  border-color: #e11d48;
+  box-shadow: 0 0 0 3px rgba(225, 29, 72, 0.1);
+}
+
+.time-input:disabled {
+  background-color: #f1f5f9;
+  color: #cbd5e1;
+  cursor: not-allowed;
+  border-color: #f1f5f9;
+}
+
+/* FOOTER BUTTON */
+.avail-footer {
+  margin-top: 30px;
+  text-align: right;
+  padding-top: 20px;
+  border-top: 1px solid #f1f5f9;
+}
+
+.save-avail-btn {
+  background-color: #e11d48;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 50px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 12px rgba(225, 29, 72, 0.2);
+}
+
+.save-avail-btn:hover {
+  background-color: #be123c;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(225, 29, 72, 0.3);
+}

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const auth = require('../middleware/auth'); // Your existing auth middleware
-const Doctor = require('../models/DoctorProfile');
+const auth = require('../middleware/auth'); 
+const Doctor = require('../models/DoctorProfile'); 
 const User = require('../models/User');
 
 // @route   GET api/doctor/me
@@ -28,7 +28,8 @@ router.get('/me', auth, async (req, res) => {
 router.post('/', auth, async (req, res) => {
   const {
     name, specialty, image, about, experience, languages, education,
-    clinicName, clinicAddress, clinicTimings, fee
+    clinicName, clinicAddress, clinicTimings, fee,
+    phone, regNumber 
   } = req.body;
 
   // Build profile object
@@ -44,8 +45,10 @@ router.post('/', auth, async (req, res) => {
   if (about) profileFields.personalInfo.about = about;
   if (experience) profileFields.personalInfo.experience = experience;
   if (education) profileFields.personalInfo.education = education;
-  
-  // Handle languages (split string by comma if it comes as "English, Hindi")
+  if (phone) profileFields.personalInfo.phone = phone;       
+  if (regNumber) profileFields.personalInfo.regNumber = regNumber; 
+
+  // Handle languages
   if (languages) {
     profileFields.personalInfo.languages = Array.isArray(languages) 
       ? languages 
@@ -61,7 +64,6 @@ router.post('/', auth, async (req, res) => {
     let profile = await Doctor.findOne({ user: req.user.id });
 
     if (profile) {
-      // Update existing profile
       profile = await Doctor.findOneAndUpdate(
         { user: req.user.id },
         { $set: profileFields },
