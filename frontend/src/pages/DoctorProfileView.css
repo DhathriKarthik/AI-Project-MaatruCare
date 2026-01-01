@@ -1,0 +1,252 @@
+/* CONTAINER & BG */
+.doc-profile-view-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 40px;
+  overflow-x: hidden;
+}
+
+/* --- 1. RED HEADER (FLOATING PILL) --- */
+.view-header-red {
+  background-color: #e11d48; /* Maatrucare Red */
+  
+  /* Floating Margins & Shape */
+  margin: 20px;
+  border-radius: 25px;
+  width: auto;
+  
+  padding: 15px 30px;
+  
+  /* Layout: Relative allows absolute positioning of the back button */
+  position: relative; 
+  display: flex;
+  justify-content: center; /* Center the Title */
+  align-items: center;
+  
+  color: white;
+  box-shadow: 0 8px 20px rgba(225, 29, 72, 0.25);
+  margin-bottom: 30px;
+  min-height: 50px; /* Ensure height for absolute button */
+}
+
+/* TITLE */
+.view-header-red h1 {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-align: center;
+  z-index: 1; /* Ensure text is above background */
+}
+
+/* --- BACK BUTTON (YOUR CUSTOM ANIMATION) --- */
+.header-back-btn {
+  /* Positioning Logic */
+  position: absolute;
+  left: 20px; /* Distance from left edge of red pill */
+  top: 50%;
+  transform: translateY(-50%); /* Centers vertically */
+  
+  /* Appearance */
+  background: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  
+  /* Icon alignment */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  color: #e11d48; 
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  
+  /* The Smooth Animation */
+  transition: all 0.3s cubic-bezier(0.25, 0.25, 0.25, 1);
+  z-index: 10;
+}
+
+.header-back-btn:hover {
+  background-color: #fff0f3;
+  
+  /* MOVES DOWN ON HOVER (Your specific request) */
+  transform: translateY(-50%) translateY(15px); 
+  
+  box-shadow: 0 8px 15px rgba(225, 29, 72, 0.15);
+}
+
+/* EDIT BUTTON (Kept on the right side) */
+.header-edit-btn {
+  position: absolute;
+  right: 20px; /* Locked to the right */
+  top: 50%;
+  transform: translateY(-50%);
+  
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: white;
+  border-radius: 30px;
+  padding: 8px 20px;
+  font-weight: 600;
+  font-size: 14px;
+  display: flex; align-items: center; gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 5;
+}
+
+.header-edit-btn:hover {
+  background: white;
+  color: #e11d48;
+}
+
+/* --- 2. CARDS GRID --- */
+.profile-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 25px;
+}
+
+/* CARD STYLE */
+.profile-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 5px 25px rgba(0,0,0,0.05);
+  border: 1px solid #f1f5f9;
+  transition: transform 0.2s;
+}
+
+.profile-card:hover {
+  transform: translateY(-3px);
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+}
+
+.card-header-icon {
+  color: #e11d48;
+  font-size: 20px;
+  background: #fff0f3;
+  padding: 10px;
+  border-radius: 12px;
+  width: 42px; height: 42px;
+}
+
+.card-header h3 {
+  margin: 0;
+  color: #1e293b;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* DATA ROWS */
+.data-group {
+  margin-bottom: 18px;
+}
+
+.data-group label {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+  display: flex; align-items: center; gap: 8px;
+}
+
+.data-value {
+  margin: 0;
+  font-size: 16px;
+  color: #334155;
+  font-weight: 600;
+}
+
+/* Helpers */
+.highlight-text { color: #e11d48; }
+.small { font-size: 15px; }
+.fee-large { font-size: 28px; color: #e11d48; font-weight: 800; }
+.stat-num { font-size: 20px; }
+.about-text { font-size: 14px; color: #475569; line-height: 1.6; font-style: italic; background: #f8fafc; padding: 10px; border-radius: 8px; }
+.two-col { display: flex; justify-content: space-between; gap: 20px; }
+.two-col div { flex: 1; }
+.clinic-address-box {
+  background: #f8fafc; padding: 15px; border-radius: 12px;
+  display: flex; gap: 12px; color: #475569; font-size: 14px; line-height: 1.4; border: 1px solid #e2e8f0;
+}
+.pin-icon { color: #ef4444; font-size: 18px; flex-shrink: 0; margin-top: 2px; }
+.timing-badge {
+  display: inline-block; background: #ecfdf5; color: #059669;
+  padding: 6px 12px; border-radius: 8px; font-size: 14px; font-weight: 700;
+}
+.rating-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #fffbeb; color: #b45309;
+  padding: 4px 12px; border-radius: 20px; font-weight: 700;
+}
+.star-gold { color: #f59e0b; }
+.stats-divider { height: 1px; background: #f1f5f9; margin: 20px 0; }
+
+/* --- 3. FOOTER QUOTE --- */
+.quote-banner-pink {
+  background-color: #fff0f3;
+  text-align: center;
+  padding: 30px;
+  margin: 40px 25px 0 25px;
+  border-radius: 20px;
+  color: #be123c;
+  border: 1px solid #ffe4e6;
+}
+
+.quote-banner-pink p {
+  font-size: 16px;
+  font-style: italic;
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.quote-author {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .view-header-red {
+    margin: 15px;
+    padding: 15px;
+    flex-direction: column; /* Stack vertically on small screens */
+    gap: 15px;
+  }
+  
+  /* Reset absolute positions on mobile for better stacking */
+  .header-back-btn, .header-edit-btn {
+    position: static;
+    transform: none;
+  }
+  
+  .header-back-btn:hover {
+     /* Simpler hover on mobile */
+     transform: scale(1.05);
+  }
+
+  .view-header-red h1 {
+    font-size: 18px;
+    margin-bottom: 5px;
+  }
+  
+  .profile-cards-grid { padding: 0 15px; gap: 15px; }
+}

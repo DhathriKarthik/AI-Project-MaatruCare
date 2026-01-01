@@ -2,7 +2,6 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-
 dotenv.config();
 
 const app = express();
@@ -13,9 +12,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true
 };
-
 app.use(cors(corsOptions));
-
 // Add COOP and COEP headers to fix Cross-Origin-Opener-Policy errors
 app.use((req, res, next) => {
   res.setHeader('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
@@ -81,14 +78,15 @@ const connectDB = async () => {
     process.exit(1); 
   }
 };
-
 connectDB();
 
 const authRoutes = require('./routes/auth'); 
 const userRoutes = require('./routes/user');
+const doctorRoutes = require('./routes/doctor');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/doctor', doctorRoutes);
 
 app.get('/', (req, res) => {
   res.send('IVPOI Backend is running...');

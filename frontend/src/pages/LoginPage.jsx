@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
-  
+
   const FACEBOOK_APP_ID = import.meta.env.VITE_FACEBOOK_APP_ID;
 
   const handleChange = (e) => {
@@ -35,7 +35,11 @@ const LoginPage = () => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userRole", res.data.user.role);
 
-        navigate("/dashboard");
+        if (role === "professional") {
+          navigate("/doctor-dashboard");
+        } else {
+          navigate("/dashboard");
+        }
       } catch (err) {
         console.error(err);
         setError(err.response?.data?.message || "Google Login Failed");
@@ -56,7 +60,11 @@ const LoginPage = () => {
 
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userRole", res.data.user.role);
-      navigate("/dashboard");
+      if (role === 'professional') {
+        navigate('/doctor-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       console.error("FB Login Error:", err);
       setError(err.response?.data?.message || "Facebook Login Failed");
@@ -77,7 +85,11 @@ const LoginPage = () => {
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("userRole", res.data.user.role);
 
-      navigate("/dashboard");
+      if (role === 'professional') {
+        navigate('/doctor-dashboard');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     }
@@ -180,18 +192,14 @@ const LoginPage = () => {
             appId={FACEBOOK_APP_ID}
             onSuccess={(response) => {
               console.log("FB Success:", response);
-              handleFacebookLogin(response); 
+              handleFacebookLogin(response);
             }}
             onFail={(error) => {
               console.log("FB Failed:", error);
               setError("Facebook Login Failed");
             }}
             render={({ onClick }) => (
-              <button
-                className="btn-social"
-                type="button"
-                onClick={onClick} 
-              >
+              <button className="btn-social" type="button" onClick={onClick}>
                 <FaFacebook size={22} />
                 Continue with Facebook
               </button>

@@ -42,7 +42,11 @@ const RegisterPage = () => {
 
         setSuccess("Account created with Google! Redirecting...");
         setTimeout(() => {
-          navigate("/dashboard");
+          if (role === 'professional') {
+            navigate('/doctor-dashboard');
+          } else {
+            navigate('/dashboard');
+          }
         }, 1500);
       } catch (err) {
         console.error("Google Register Error:", err);
@@ -69,7 +73,7 @@ const RegisterPage = () => {
       localStorage.setItem("userRole", res.data.user.role);
 
       setSuccess("Account created with Facebook! Redirecting...");
-      setTimeout(() => navigate("/dashboard"), 1500);
+      setTimeout(() => role === "professional" ? navigate("/doctor-dashboard") : navigate("/dashboard"), 1500);
     } catch (err) {
       console.error(err);
       setError("Facebook Registration Failed.");

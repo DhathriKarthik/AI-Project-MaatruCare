@@ -26,24 +26,6 @@
   margin: 0;
 }
 
-/* .back-btn {
-  background: white;
-  color: #e91e63;
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-
-.back-btn:hover {
-  transform: scale(1.1);
-} */
-
 .btn-back {
   background: white;
   position: absolute;
@@ -217,4 +199,132 @@
 
 .contact-btn:hover {
   opacity: 0.9;
+}
+
+
+.current-doc-badge {
+  position: absolute;
+  right: 20px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 14px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+
+.card-selected {
+  border: 2px solid #e11d48;
+  background-color: #fff0f3;
+  transform: scale(1.02);
+  z-index: 5;
+}
+
+.card-dimmed {
+  background-color: #f0f2f5;
+  border: 1px solid #dce0e5; 
+  box-shadow: none;
+  transform: scale(0.98); 
+  pointer-events: none; 
+  transition: all 0.3s ease;
+}
+
+.card-dimmed h3,
+.card-dimmed .location-text {
+  color: #6c757d; 
+}
+
+.selection-area {
+  margin-bottom: 15px;
+  width: 100%;
+}
+
+.choose-btn {
+  width: 100%;
+  padding: 8px;
+  background-color: #e11d48;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s;
+}
+
+.choose-btn:hover {
+  background-color: #be123c;
+}
+
+.remove-btn {
+  width: 100%;
+  padding: 8px;
+  background-color: #64748b;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.remove-btn:hover {
+  background-color: #475569;
+}
+
+.disabled-actions {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.disabled-actions .contact-btn {
+  background-color: #e0e0e0 !important; 
+  color: #757575 !important; 
+  border: 1px solid #c0c0c0; 
+  opacity: 1; 
+ box-shadow: none;
+}
+
+.loading-msg {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+  font-size: 18px;
+}
+
+
+
+.load-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+.load-more-btn {
+  background-color: white;
+  color: #e11d48;
+  border: 2px solid #e11d48;
+  padding: 12px 30px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(225, 29, 72, 0.1);
+}
+
+.load-more-btn:hover {
+  background-color: #e11d48;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(225, 29, 72, 0.2);
+}
+
+.load-more-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }

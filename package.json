@@ -7,8 +7,8 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\" \"npm run chatbot\" \"npm run moodanalyzer\"",
     "backend": "cd backend && npm run dev",
     "frontend": "cd frontend && npm run dev",
-    "chatbot": "cd MaatruCare_ML/Chatbot && .venv\\Scripts\\activate.bat && python chatbot_api.py",
-    "moodanalyzer": "cd MaatruCare_ML/MoodAnalyser && .venv\\Scripts\\activate.bat && python api.py"
+    "chatbot": "  cd .venv\\Scripts\\activate.bat &&  MaatruCare_ML/Chatbot &&  python chatbot_api.py",
+    "moodanalyzer": " cd .venv\\Scripts\\activate.bat && MaatruCare_ML/MoodAnalyser && python api.py"
   },
   "devDependencies": {
     "concurrently": "^9.0.0"
