@@ -96,7 +96,7 @@ const DoctorProfileSetup = () => {
 };
 
   const handleFinalContinue = () => {
-    navigate('/doctor-dashboard');
+    navigate('/doctor-profile-view');
   };
 
 
@@ -222,7 +222,7 @@ const DoctorProfileSetup = () => {
             <h2>Profile Completed!</h2>
             <p>Your details have been saved successfully. You are now ready to accept patients.</p>
             <button className="modal-continue-btn" onClick={handleFinalContinue}>
-              Go to Dashboard
+              Go to Profile Page
             </button>
           </div>
         </div>

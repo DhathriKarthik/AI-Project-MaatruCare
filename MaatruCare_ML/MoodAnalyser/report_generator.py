@@ -9,10 +9,22 @@ from reportlab.lib.units import inch
 import io
 import os
 from bson import ObjectId
+from dotenv import load_dotenv
 
+load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
-client = MongoClient(MONGO_URI)
+if not MONGO_URI:
+    raise ValueError("MONGO_URI environment variable not set!")
+
+try:
+    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    client.admin.command('ping')
+    print("✓ MongoDB connected successfully")
+except Exception as e:
+    print(f"✗ MongoDB connection error: {e}")
+    raise
+
 db = client.MaatruCare
 moods_collection = db.journals
 
@@ -20,6 +32,9 @@ moods_collection = db.journals
 def generate_mood_report(user_id: str, days: int = 7):
     """Generate PDF mood report for last N days"""
     print("REPORT user_id =", repr(user_id))
+    
+    if not user_id:
+        raise ValueError("user_id cannot be empty")
     
     # Smart userId filter - handles ObjectId OR string
     filter_query = {"userId": user_id}  # Default string match
@@ -29,8 +44,12 @@ def generate_mood_report(user_id: str, days: int = 7):
     except:
         print("DEBUG: Using string filter")
     
-    moods = list(moods_collection.find(filter_query).sort("timestamp", 1))
-    print("FOUND moods:", len(moods))
+    try:
+        moods = list(moods_collection.find(filter_query).sort("timestamp", 1))
+        print("FOUND moods:", len(moods))
+    except Exception as e:
+        print(f"Database query error: {e}")
+        return None
     
     if not moods:
         print("No moods found - returning None")

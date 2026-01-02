@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FaArrowLeft,FaCheckCircle } from 'react-icons/fa';
 import './ProfileSetup.css'; 
 
 const ProfileSetup = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  
+  const [showSuccess, setShowSuccess] = useState(false);
+
   const [formData, setFormData] = useState({
     fullName: '',
     dateOfBirth: '',
@@ -73,13 +74,16 @@ const ProfileSetup = () => {
       await axios.post("http://localhost:5000/api/user/profile", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      alert("Profile Saved Successfully!");
-      navigate("/profile-view");
+      setShowSuccess(true);
+    
     } catch (err) {
       console.error(err);
       setError("Failed to save profile. Please try again.");
     }
+  };
+
+   const handleFinalContinue = () => {
+    navigate('/profile-view');
   };
 
   return (
@@ -200,6 +204,21 @@ const ProfileSetup = () => {
         </div>
 
       </div>
+       {/* --- SUCCESS POPUP MODAL --- */}
+            {showSuccess && (
+              <div className="modal-overlay">
+                <div className="success-modal">
+                  <div className="success-icon-wrapper">
+                    <FaCheckCircle />
+                  </div>
+                  <h2>Profile Completed!</h2>
+                  <p>Your details have been saved successfully.</p>
+                  <button className="modal-continue-btn" onClick={handleFinalContinue}>
+                    Go to Profile Page
+                  </button>
+                </div>
+              </div>
+            )}
     </div>
   );
 };

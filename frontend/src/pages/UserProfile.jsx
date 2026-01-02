@@ -22,7 +22,6 @@ const UserProfile = () => {
   if (token) {
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
-      console.log("JWT payload:", payload);
       userId = payload.id || payload._id; // same id used in req.userId
     } catch (e) {
       console.error("Failed to decode token", e);
