@@ -111,11 +111,6 @@ const DoctorProfileView = () => {
             <FaMapMarkerAlt className="pin-icon"/>
             <p>{cInfo.address || 'No address provided.'}</p>
           </div>
-
-           <div className="data-group" style={{marginTop: '20px'}}>
-            <label><FaClock /> Available Timings</label>
-            <p className="data-value timing-badge">{cInfo.timings || 'Not set'}</p>
-          </div>
         </div>
 
         {/* CARD 3: FEES & STATS */}

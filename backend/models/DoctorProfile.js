@@ -14,7 +14,9 @@ const DoctorSchema = new mongoose.Schema({
     about: { type: String }, 
     experience: { type: String }, 
     languages: { type: [String] }, 
-    education: { type: String } 
+    education: { type: String },
+    phone: { type: String },
+    regno : { type: Number,default: 0}
   },
   clinicInfo: {
     name: { type: String }, 
