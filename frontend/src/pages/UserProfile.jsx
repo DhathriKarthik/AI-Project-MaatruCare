@@ -108,7 +108,6 @@ const UserProfile = () => {
       >
         <FaUserEdit style={{ marginRight: "8px" }} /> Edit
       </button>
-
     </header>
 
       <div
