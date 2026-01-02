@@ -71,6 +71,12 @@ const loadJournalEntries = async () => {
     console.error("Error loading journals", err);
   }
 };
+
+const handleMoodSaved = (moodLabel) => {
+  console.log('🎉 Emoji saved:', moodLabel);
+  loadJournalEntries();  // REFRESH list instantly
+};
+
 const loadHappyMoments = async () => {
   try {
     const token = localStorage.getItem("token");
@@ -127,6 +133,29 @@ const handleAddJournalEntry = async (entry) => {
   }
 };
 
+const handleAddMoodEntry = async (moodLabel) => {
+  try {
+    const token = localStorage.getItem("token");
+    const res = await fetch("http://localhost:5000/api/journals", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ 
+        content: moodLabel,  // "Very Bad"
+        entryDateTime: new Date().toISOString()
+      }),
+    });
+
+    const newEntry = await res.json();
+    // INSTANT ADD like text journals
+    setJournalEntries(prev => [newEntry, ...prev]);
+    console.log('Mood entry added:', newEntry.content);  // "Very Bad"
+  } catch (err) {
+    console.error("Error adding mood", err);
+  }
+};
 
   const handleAddHappyMoment = async (moment) => {
   try {
@@ -223,6 +252,7 @@ const handleAddJournalEntry = async (entry) => {
               <MoodInput
                 onMoodSelect={handleMoodSelect}
                 selectedMood={selectedMood}
+                onMoodSaved={handleMoodSaved} 
               />
             </div>
           </div>
