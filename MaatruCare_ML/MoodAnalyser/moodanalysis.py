@@ -49,7 +49,7 @@ class MoodAnalyzer:
                 'sentiment_score': round(score, 3),
                 'corrected_text': corrected,
                 'original_text': text[:100] + "..." if len(text) > 100 else text,
-                'timestamp': datetime.now().isoformat(),
+                'timestamp': datetime.now(),  # Return datetime object instead of ISO string
                 'needs_alert': mood in ['High Risk', 'Moderate Risk']
             }
         except Exception as e:

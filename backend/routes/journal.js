@@ -6,9 +6,7 @@ const router = express.Router();
 
 const MOOD_API_URL = "http://127.0.0.1:8002/analyze-mood";
 
-// node-fetch dynamic import
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+// Native fetch is available in Node.js 18+
 
 // Get all journals for logged-in user
 router.get("/", authMiddleware, async (req, res) => {
